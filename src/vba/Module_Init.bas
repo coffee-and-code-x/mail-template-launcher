@@ -118,7 +118,9 @@ Private Sub CreateSettingsSheet()
     data = Array( _
         Array(CFG_DATE_FORMAT, "yyyy/mm/dd", "日付の表示形式（例: yyyy/mm/dd または yyyy年m月d日）"), _
         Array(CFG_MAX_RESULTS, "100", "案件検索の最大表示件数"), _
-        Array("検索後に案件検索シートへ移動", "TRUE", "検索実行後に案件検索シートに自動移動する（TRUE/FALSE）") _
+        Array("検索後に案件検索シートへ移動", "TRUE", "検索実行後に案件検索シートに自動移動する（TRUE/FALSE）"), _
+        Array("Outlookパス", "", "Office 365版など特定のOutlookを使う場合にパスを指定（例: C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE）"), _
+        Array("Outlook起動待機秒数", "5", "Outlookパス指定時、起動完了まで待機する最大秒数") _
     )
 
     Dim i As Integer
