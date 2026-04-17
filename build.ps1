@@ -153,15 +153,29 @@ try {
         exit 1
     }
 
+    # VBComponents.Import reads files as Shift-JIS (cp932) on Japanese Windows.
+    # Convert each UTF-8 source file to a Shift-JIS temp file before importing.
+    $sjis     = [System.Text.Encoding]::GetEncoding(932)
+    $utf8     = [System.Text.Encoding]::UTF8
+    $tempFiles = @()
+
     foreach ($file in $ModuleFiles) {
         $filePath = Join-Path $VbaDir $file
         Write-Step "Importing: $file"
-        $vbProject.VBComponents.Import($filePath) | Out-Null
+
+        # Read as UTF-8, write temp file as Shift-JIS
+        $content  = [System.IO.File]::ReadAllText($filePath, $utf8)
+        $tempPath = [System.IO.Path]::GetTempFileName()
+        $tempPath = [System.IO.Path]::ChangeExtension($tempPath, [System.IO.Path]::GetExtension($file))
+        [System.IO.File]::WriteAllText($tempPath, $content, $sjis)
+        $tempFiles += $tempPath
+
+        $vbProject.VBComponents.Import($tempPath) | Out-Null
     }
 
-    # Replace ThisWorkbook module content
+    # Replace ThisWorkbook module content (insert lines directly, no file import)
     Write-Step "Importing: ThisWorkbook.cls"
-    $thisWbContent = Get-Content $thisWbFile -Raw -Encoding UTF8
+    $thisWbContent = [System.IO.File]::ReadAllText($thisWbFile, $utf8)
     $codeLines = $thisWbContent -split "`n" | Where-Object {
         $_ -notmatch "^VERSION\s" -and
         $_ -notmatch "^BEGIN\s*$" -and
@@ -176,6 +190,9 @@ try {
         $codeModule.DeleteLines(1, $codeModule.CountOfLines)
     }
     $codeModule.InsertLines(1, $codeOnly)
+
+    # Clean up temp files
+    $tempFiles | ForEach-Object { Remove-Item $_ -Force -ErrorAction SilentlyContinue }
 
     Write-Success "All VBA modules imported"
 
