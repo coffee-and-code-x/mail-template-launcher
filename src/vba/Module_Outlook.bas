@@ -198,7 +198,7 @@ End Sub
 ' CreateEmailFromTemplate: テンプレートIDと案件データからメールを作成する
 ' Module_Launcher.LaunchTemplate から呼び出される統合関数
 '-------------------------------------------------------------
-Public Sub CreateEmailFromTemplate(templateID As Long, project As ProjectData)
+Public Sub CreateEmailFromTemplate(templateID As Long, project As CProjectData)
     If FindTemplateRow(templateID) = 0 Then
         MsgBox "テンプレートID " & templateID & " が見つかりません。", _
                vbExclamation, "テンプレートエラー"

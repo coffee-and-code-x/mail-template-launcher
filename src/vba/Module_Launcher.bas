@@ -22,11 +22,11 @@ Public Sub LaunchTemplate(templateID As Long)
     End If
 
     ' 選択中の案件を取得
-    Dim project As ProjectData
-    project = GetSelectedProject()
+    Dim project As CProjectData
+    Set project = GetSelectedProject()
 
     ' 案件未選択の場合の確認
-    If Trim(project.案件名) = "" Then
+    If project.IsEmpty() Then
         Dim ans As Integer
         ans = MsgBox("案件が選択されていません。" & vbCrLf & vbCrLf & _
                      "案件情報なし（プレースホルダーは空のまま）でメールを作成しますか？" & vbCrLf & vbCrLf & _

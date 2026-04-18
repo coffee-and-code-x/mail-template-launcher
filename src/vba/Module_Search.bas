@@ -45,8 +45,8 @@ Public Sub SearchProjects()
     Dim allResults As New Collection
     Dim i As Integer
     For i = 1 To settings.Count
-        Dim setting As FileSetting
-        setting = settings(i)
+        Dim setting As CFileSetting
+        Set setting = settings(i)
         Application.StatusBar = "検索中: " & setting.DisplayName & " (" & i & "/" & settings.Count & ")"
 
         Dim fileResults As Collection
@@ -92,8 +92,8 @@ Private Sub WriteResultsToSheet(ws As Worksheet, results As Collection)
 
     Dim i As Integer
     For i = 1 To results.Count
-        Dim pd As ProjectData
-        pd = results(i)
+        Dim pd As CProjectData
+        Set pd = results(i)
 
         ws.Cells(row, 1).Value = pd.案件名
         ws.Cells(row, 2).Value = pd.案件番号
@@ -246,8 +246,8 @@ End Sub
 ' GetSelectedProject: 現在選択中の案件情報を返す
 ' ProjectData が空（案件名=""）の場合は未選択
 '-------------------------------------------------------------
-Public Function GetSelectedProject() As ProjectData
-    Dim pd As ProjectData
+Public Function GetSelectedProject() As CProjectData
+    Dim pd As New CProjectData
     On Error GoTo ErrHandler
 
     pd.案件名   = CStr(ThisWorkbook.Names("rng_Sel_案件名").RefersToRange.Value)
@@ -256,11 +256,10 @@ Public Function GetSelectedProject() As ProjectData
     pd.担当者名 = CStr(ThisWorkbook.Names("rng_Sel_担当者名").RefersToRange.Value)
     pd.期日     = CStr(ThisWorkbook.Names("rng_Sel_期日").RefersToRange.Value)
 
-    GetSelectedProject = pd
+    Set GetSelectedProject = pd
     Exit Function
 ErrHandler:
-    ' 名前付き範囲が存在しない場合は空を返す
-    GetSelectedProject = pd
+    Set GetSelectedProject = pd
 End Function
 
 '-------------------------------------------------------------

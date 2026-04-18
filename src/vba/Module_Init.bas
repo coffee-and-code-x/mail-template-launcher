@@ -326,7 +326,19 @@ Private Sub CreateSearchSheet()
     ws.Columns("E").ColumnWidth = 14
     ws.Columns("F").ColumnWidth = 40
 
-    ' 選択中案件 表示エリア（30行目以降）
+    ' 選択中案件 表示エリア
+    SetupSearchSelectionArea ws
+
+    ' ウィンドウ枠の固定
+    ws.Activate
+    ws.Range("A6").Select
+    ActiveWindow.FreezePanes = True
+End Sub
+
+'-------------------------------------------------------------
+' SetupSearchSelectionArea: 案件検索シートの選択中案件表示エリアを設定する
+'-------------------------------------------------------------
+Private Sub SetupSearchSelectionArea(ws As Worksheet)
     ws.Range("A29").Value = "─────────────────────────────"
     ws.Range("A30").Value = "■ 選択中の案件"
     ws.Range("A30").Font.Bold = True
@@ -347,12 +359,7 @@ Private Sub CreateSearchSheet()
     Next r
 
     ' B31:B35 は名前付き範囲で設定される（EnsureNamedRanges）
-    ws.Range("B31:B35").Interior.Color = RGB(240, 248, 255)  ' 薄い青背景
-
-    ' ウィンドウ枠の固定
-    ws.Activate
-    ws.Range("A6").Select
-    ActiveWindow.FreezePanes = True
+    ws.Range("B31:B35").Interior.Color = RGB(240, 248, 255)
 End Sub
 
 '-------------------------------------------------------------

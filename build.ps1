@@ -38,7 +38,10 @@ $OutputFile = if ($OutputPath -ne "") { $OutputPath } else {
 }
 
 # VBA module import order (dependency order)
+# Class modules (.cls) must come before standard modules that use them
 $ModuleFiles = @(
+    "CProjectData.cls",
+    "CFileSetting.cls",
     "Module_Types.bas",
     "Module_Utils.bas",
     "Module_Init.bas",

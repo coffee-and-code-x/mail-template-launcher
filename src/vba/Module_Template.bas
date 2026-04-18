@@ -78,7 +78,7 @@ End Function
 '-------------------------------------------------------------
 ' BuildEmailBody: テンプレート本文を読み取り、プレースホルダーを置換して返す
 '-------------------------------------------------------------
-Public Function BuildEmailBody(templateID As Long, project As ProjectData) As String
+Public Function BuildEmailBody(templateID As Long, project As CProjectData) As String
     Dim bodySheetName As String
     bodySheetName = GetBodySheetName(templateID)
 
@@ -109,7 +109,7 @@ End Function
 '-------------------------------------------------------------
 ' BuildSubjectLine: テンプレート件名にプレースホルダー置換を適用して返す
 '-------------------------------------------------------------
-Public Function BuildSubjectLine(templateID As Long, project As ProjectData) As String
+Public Function BuildSubjectLine(templateID As Long, project As CProjectData) As String
     Dim row As Long
     row = FindTemplateRow(templateID)
     If row = 0 Then
@@ -125,7 +125,7 @@ End Function
 '-------------------------------------------------------------
 ' BuildToAddress: 宛先 (To) にプレースホルダー置換を適用して返す
 '-------------------------------------------------------------
-Public Function BuildToAddress(templateID As Long, project As ProjectData) As String
+Public Function BuildToAddress(templateID As Long, project As CProjectData) As String
     Dim row As Long
     row = FindTemplateRow(templateID)
     If row = 0 Then
@@ -141,7 +141,7 @@ End Function
 '-------------------------------------------------------------
 ' BuildCCAddress: CC にプレースホルダー置換を適用して返す
 '-------------------------------------------------------------
-Public Function BuildCCAddress(templateID As Long, project As ProjectData) As String
+Public Function BuildCCAddress(templateID As Long, project As CProjectData) As String
     Dim row As Long
     row = FindTemplateRow(templateID)
     If row = 0 Then
@@ -158,7 +158,7 @@ End Function
 ' SubstitutePlaceholders: テキスト内のプレースホルダーを案件データで置換する
 ' 全てのフィールド（宛先・件名・本文）で使用可能
 '-------------------------------------------------------------
-Public Function SubstitutePlaceholders(text As String, project As ProjectData) As String
+Public Function SubstitutePlaceholders(text As String, project As CProjectData) As String
     Dim result As String
     result = text
 
