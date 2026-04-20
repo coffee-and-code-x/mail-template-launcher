@@ -41,7 +41,8 @@ $OutputFile = if ($OutputPath -ne "") { $OutputPath } else {
 $ModuleFiles = @(
     "Module_Template.bas",
     "Module_Outlook.bas",
-    "Module_Launcher.bas"
+    "Module_Launcher.bas",
+    "Module_Setup.bas"
 )
 
 # ============================================================
