@@ -164,14 +164,30 @@ Private Sub CreateBodySheets()
         ws.Name = sheetName
         ws.Tab.Color = RGB(180, 198, 231)
 
-        ' プレースホルダー説明（A1）
+        ' 説明テキスト（A1）
         With ws.Range("A1")
-            .Value = "【プレースホルダー】 テンプレート一覧 A2-A4 のラベル名を {} で囲んで使用  例: {案件名}  {顧客名}"
+            .Value = "本文を A2 に入力してください。右のボタンでプレースホルダーをコピーして貼り付けられます。"
             .Interior.Color = RGB(255, 255, 200)
             .Font.Color = RGB(128, 100, 0)
             .Font.Size = 9
             .Font.Italic = True
         End With
+
+        ' プレースホルダー挿入ボタン（B1, C1, D1）
+        ws.Columns("B").ColumnWidth = 12
+        ws.Columns("C").ColumnWidth = 12
+        ws.Columns("D").ColumnWidth = 12
+
+        Dim bc As Integer
+        For bc = 1 To 3
+            Dim btnCell As Range
+            Set btnCell = ws.Cells(1, bc + 1)
+            Dim pBtn As Object
+            Set pBtn = ws.Buttons.Add(btnCell.Left + 1, btnCell.Top + 1, btnCell.Width - 2, btnCell.Height - 2)
+            pBtn.Caption = "{項目" & bc & "}"
+            pBtn.Name = "PlaceholderBtn_" & bc
+            pBtn.OnAction = "InsertPlaceholder"
+        Next bc
 
         ' 本文入力エリア（A2）
         With ws.Range("A2")

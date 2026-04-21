@@ -40,7 +40,19 @@ Private Function FindTemplateRow(templateID As Long) As Long
 End Function
 
 '-------------------------------------------------------------
-' SubstitutePlaceholders: A列のラベルをキーにプレースホルダーを置換する
+' GetFieldLabel: 入力エリアの指定フィールド（1〜3）のラベル名を返す
+' 末尾の「:」は除去して返す
+'-------------------------------------------------------------
+Public Function GetFieldLabel(fieldNum As Long) As String
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets(SHEET_TEMPLATES)
+    Dim label As String
+    label = Trim(CStr(ws.Cells(INPUT_ROW_START + fieldNum - 1, 1).Value))
+    If Right(label, 1) = ":" Then label = Left(label, Len(label) - 1)
+    GetFieldLabel = Trim(label)
+End Function
+
+ A列のラベルをキーにプレースホルダーを置換する
 ' A2:A4 のラベル名（末尾の「:」は除去）が {ラベル名} にマッチする
 ' 例) A2="案件名:" B2="ABC" → {案件名} を "ABC" に置換
 '-------------------------------------------------------------
