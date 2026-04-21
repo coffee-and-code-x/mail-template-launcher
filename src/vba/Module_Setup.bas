@@ -75,9 +75,9 @@ Private Sub CreateTemplateListSheet()
     End With
 
     ' 案件情報入力エリア（B2:B4）
-    ws.Range("A2").Value = "案件名:"
-    ws.Range("A3").Value = "案件番号:"
-    ws.Range("A4").Value = "顧客名:"
+    ws.Range("A2").Value = "項目1:"
+    ws.Range("A3").Value = "項目2:"
+    ws.Range("A4").Value = "項目3:"
     ws.Range("A2:A4").Font.Bold = True
     ws.Range("A2:A4").Font.Color = RGB(68, 114, 196)
     ws.Range("B2:B4").Interior.Color = RGB(255, 255, 200)
