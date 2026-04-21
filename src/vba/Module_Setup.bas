@@ -33,10 +33,10 @@ Public Sub SetupSheets()
 
     MsgBox "セットアップが完了しました。" & vbCrLf & vbCrLf & _
            "次の手順で設定してください：" & vbCrLf & _
-           "  1. B2〜B4 に案件情報を入力（毎回変える）" & vbCrLf & _
+           "  1. B2-B4 に項目を入力（毎回変える）" & vbCrLf & _
            "  2. B5 に Office 365 版 Outlook のパスを入力（任意）" & vbCrLf & _
-           "  3. 8〜12行目の宛先・CC・件名を編集" & vbCrLf & _
-           "  4. 本文_1〜本文_5 シートのA2に本文を入力", _
+           "  3. 8-12行目の宛先・CC・件名を編集" & vbCrLf & _
+           "  4. 本文_1 から 本文_5 シートのA2に本文を入力", _
            vbInformation, "セットアップ完了"
 End Sub
 
@@ -51,7 +51,7 @@ End Sub
 '   5: Outlookパス (B5) ← 任意。365と2016が共存する場合に設定
 '   6: 区切り線
 '   7: ヘッダー行
-'   8〜12: テンプレート 1〜5
+'   8-12: テンプレート 1-5
 '-------------------------------------------------------------
 Private Sub CreateTemplateListSheet()
     If SheetExists(SHEET_TEMPLATES) Then
@@ -112,7 +112,7 @@ Private Sub CreateTemplateListSheet()
         .RowHeight = 22
     End With
 
-    ' テンプレート5件（8〜12行目）
+    ' テンプレート5件（8-12行目）
     Dim i As Integer
     For i = 1 To 5
         Dim r As Long
@@ -147,7 +147,7 @@ Private Sub CreateTemplateListSheet()
 End Sub
 
 '-------------------------------------------------------------
-' CreateBodySheets: 本文_1〜本文_5 シートを作成する
+' CreateBodySheets: 本文_1-本文_5 シートを作成する
 '-------------------------------------------------------------
 Private Sub CreateBodySheets()
     Dim i As Integer
@@ -166,7 +166,7 @@ Private Sub CreateBodySheets()
 
         ' プレースホルダー説明（A1）
         With ws.Range("A1")
-            .Value = "【プレースホルダー】 テンプレート一覧 A2〜A4 のラベル名を {} で囲んで使用  例: {案件名}  {顧客名}"
+            .Value = "【プレースホルダー】 テンプレート一覧 A2-A4 のラベル名を {} で囲んで使用  例: {案件名}  {顧客名}"
             .Interior.Color = RGB(255, 255, 200)
             .Font.Color = RGB(128, 100, 0)
             .Font.Size = 9
