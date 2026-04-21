@@ -166,7 +166,7 @@ Private Sub CreateBodySheets()
 
         ' 説明テキスト（A1）
         With ws.Range("A1")
-            .Value = "本文を A2 に入力してください。右のボタンでプレースホルダーをコピーして貼り付けられます。"
+            .Value = "本文を A2 に入力してください。形式はテンプレート一覧の C列 で HTML / TEXT を選択。HTML の場合は <p> <br> 等のタグを使用。右のボタンでプレースホルダーをコピーできます。"
             .Interior.Color = RGB(255, 255, 200)
             .Font.Color = RGB(128, 100, 0)
             .Font.Size = 9

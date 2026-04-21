@@ -136,5 +136,14 @@ Public Function GetBody(templateID As Long) As String
         Exit Function
     End If
 
-    GetBody = SubstitutePlaceholders(CStr(ws.Range("A2").Value))
+    Dim result As String
+    result = SubstitutePlaceholders(CStr(ws.Range("A2").Value))
+
+    ' TEXT形式: セル内改行(LF)を vbCrLf に正規化
+    If Not IsHTMLFormat(templateID) Then
+        result = Replace(result, vbCr & vbLf, vbLf)  ' 既存の CRLF を一旦 LF に統一
+        result = Replace(result, vbLf, vbCrLf)        ' LF → CRLF
+    End If
+
+    GetBody = result
 End Function
