@@ -166,7 +166,7 @@ Private Sub CreateBodySheets()
 
         ' プレースホルダー説明（A1）
         With ws.Range("A1")
-            .Value = "【利用可能なプレースホルダー】  {案件名}  {案件番号}  {顧客名}"
+            .Value = "【プレースホルダー】 テンプレート一覧 A2〜A4 のラベル名を {} で囲んで使用  例: {案件名}  {顧客名}"
             .Interior.Color = RGB(255, 255, 200)
             .Font.Color = RGB(128, 100, 0)
             .Font.Size = 9

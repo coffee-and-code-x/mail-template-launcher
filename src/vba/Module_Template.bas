@@ -17,10 +17,9 @@ Private Const COL_CC         As Long = 5   ' E: CC
 Private Const COL_SUBJECT    As Long = 6   ' F: 件名
 Private Const COL_BODY_SHEET As Long = 7   ' G: 本文シート名
 
-' 案件情報入力セル（B列）
-Private Const ROW_案件名   As Long = 2
-Private Const ROW_案件番号 As Long = 3
-Private Const ROW_顧客名   As Long = 4
+' 案件情報入力エリア（A列: ラベル＝プレースホルダー名, B列: 入力値）
+Private Const INPUT_ROW_START As Long = 2
+Private Const INPUT_ROW_END   As Long = 4
 
 '-------------------------------------------------------------
 ' FindTemplateRow: IDに対応する行番号を返す（未発見は 0）
@@ -41,16 +40,27 @@ Private Function FindTemplateRow(templateID As Long) As Long
 End Function
 
 '-------------------------------------------------------------
-' SubstitutePlaceholders: {案件名} {案件番号} {顧客名} を置換する
+' SubstitutePlaceholders: A列のラベルをキーにプレースホルダーを置換する
+' A2:A4 のラベル名（末尾の「:」は除去）が {ラベル名} にマッチする
+' 例) A2="案件名:" B2="ABC" → {案件名} を "ABC" に置換
 '-------------------------------------------------------------
 Public Function SubstitutePlaceholders(text As String) As String
     Dim ws As Worksheet
     Set ws = ThisWorkbook.Sheets(SHEET_TEMPLATES)
     Dim result As String
     result = text
-    result = Replace(result, "{案件名}",   Trim(CStr(ws.Cells(ROW_案件名,   2).Value)))
-    result = Replace(result, "{案件番号}", Trim(CStr(ws.Cells(ROW_案件番号, 2).Value)))
-    result = Replace(result, "{顧客名}",   Trim(CStr(ws.Cells(ROW_顧客名,   2).Value)))
+
+    Dim r As Long
+    For r = INPUT_ROW_START To INPUT_ROW_END
+        Dim label As String
+        label = Trim(CStr(ws.Cells(r, 1).Value))
+        If Right(label, 1) = ":" Then label = Left(label, Len(label) - 1)
+        label = Trim(label)
+        If label <> "" Then
+            result = Replace(result, "{" & label & "}", Trim(CStr(ws.Cells(r, 2).Value)))
+        End If
+    Next r
+
     SubstitutePlaceholders = result
 End Function
 
