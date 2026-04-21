@@ -44,10 +44,12 @@ Public Sub InsertPlaceholder()
     ' ボタンのキャプションを現在のラベルに同期
     ActiveSheet.Buttons(callerName).Caption = placeholder
 
-    ' クリップボードにコピー
-    CreateObject("htmlfile").ParentWindow.ClipboardData.SetData "text", placeholder
+    ' A2 の末尾にプレースホルダーを追記
+    Dim bodyCell As Range
+    Set bodyCell = ActiveSheet.Range("A2")
+    bodyCell.Value = bodyCell.Value & placeholder
 
-    Application.StatusBar = placeholder & "  をコピーしました  - A2 セルで Ctrl+V で貼り付けてください"
+    Application.StatusBar = placeholder & " を挿入しました"
     Exit Sub
 
 ErrHandler:
