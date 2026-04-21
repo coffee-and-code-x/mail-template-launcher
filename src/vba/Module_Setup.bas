@@ -34,13 +34,24 @@ Public Sub SetupSheets()
     MsgBox "セットアップが完了しました。" & vbCrLf & vbCrLf & _
            "次の手順で設定してください：" & vbCrLf & _
            "  1. B2〜B4 に案件情報を入力（毎回変える）" & vbCrLf & _
-           "  2. 7〜11行目の宛先・CC・件名を編集" & vbCrLf & _
-           "  3. 本文_1〜本文_5 シートのA2に本文を入力", _
+           "  2. B5 に Office 365 版 Outlook のパスを入力（任意）" & vbCrLf & _
+           "  3. 8〜12行目の宛先・CC・件名を編集" & vbCrLf & _
+           "  4. 本文_1〜本文_5 シートのA2に本文を入力", _
            vbInformation, "セットアップ完了"
 End Sub
 
 '-------------------------------------------------------------
 ' CreateTemplateListSheet: テンプレート一覧シートを作成する
+'
+' 行レイアウト:
+'   1: タイトル
+'   2: 案件名 (B2)
+'   3: 案件番号 (B3)
+'   4: 顧客名 (B4)
+'   5: Outlookパス (B5) ← 任意。365と2016が共存する場合に設定
+'   6: 区切り線
+'   7: ヘッダー行
+'   8〜12: テンプレート 1〜5
 '-------------------------------------------------------------
 Private Sub CreateTemplateListSheet()
     If SheetExists(SHEET_TEMPLATES) Then
@@ -63,7 +74,7 @@ Private Sub CreateTemplateListSheet()
         .RowHeight = 28
     End With
 
-    ' 案件情報入力エリア（毎回ここに入力する）
+    ' 案件情報入力エリア（B2:B4）
     ws.Range("A2").Value = "案件名:"
     ws.Range("A3").Value = "案件番号:"
     ws.Range("A4").Value = "顧客名:"
@@ -72,29 +83,40 @@ Private Sub CreateTemplateListSheet()
     ws.Range("B2:B4").Interior.Color = RGB(255, 255, 200)
     ws.Range("A2:H4").RowHeight = 22
 
-    ' 区切り線
-    ws.Range("A5:H5").Interior.Color = RGB(200, 200, 200)
-    ws.Rows(5).RowHeight = 4
+    ' Outlookパス設定（B5）
+    ws.Range("A5").Value = "Outlookパス:"
+    ws.Range("A5").Font.Color = RGB(128, 128, 128)
+    ws.Range("A5").Font.Size = 9
+    ws.Range("B5").Interior.Color = RGB(245, 245, 245)
+    ws.Range("B5:H5").Merge
+    ws.Range("B5").Font.Color = RGB(128, 128, 128)
+    ws.Range("B5").Font.Size = 9
+    ws.Range("B5").Value = ""  ' 例: C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE
+    ws.Rows(5).RowHeight = 18
 
-    ' ヘッダー行（6行目）
+    ' 区切り線
+    ws.Range("A6:H6").Interior.Color = RGB(200, 200, 200)
+    ws.Rows(6).RowHeight = 4
+
+    ' ヘッダー行（7行目）
     Dim headers As Variant
     headers = Array("ID", "テンプレート名", "形式", "宛先 (To)", "CC", "件名", "本文シート", "起動")
     Dim c As Integer
     For c = 0 To 7
-        ws.Cells(6, c + 1).Value = headers(c)
+        ws.Cells(7, c + 1).Value = headers(c)
     Next c
-    With ws.Range("A6:H6")
+    With ws.Range("A7:H7")
         .Interior.Color = RGB(68, 114, 196)
         .Font.Color = RGB(255, 255, 255)
         .Font.Bold = True
         .RowHeight = 22
     End With
 
-    ' テンプレート5件（7〜11行目）
+    ' テンプレート5件（8〜12行目）
     Dim i As Integer
     For i = 1 To 5
         Dim r As Long
-        r = 6 + i
+        r = 7 + i
         ws.Cells(r, 1).Value = i
         ws.Cells(r, 2).Value = "テンプレート" & i
         ws.Cells(r, 3).Value = "TEXT"
@@ -114,7 +136,7 @@ Private Sub CreateTemplateListSheet()
     Next i
 
     ' 列幅
-    ws.Columns("A").ColumnWidth = 5
+    ws.Columns("A").ColumnWidth = 14
     ws.Columns("B").ColumnWidth = 22
     ws.Columns("C").ColumnWidth = 8
     ws.Columns("D").ColumnWidth = 28

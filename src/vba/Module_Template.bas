@@ -7,7 +7,7 @@ Option Explicit
 
 ' テンプレート一覧シートのレイアウト
 Private Const SHEET_TEMPLATES As String = "テンプレート一覧"
-Private Const DATA_START_ROW  As Long = 7   ' テンプレートデータ開始行
+Private Const DATA_START_ROW  As Long = 8   ' テンプレートデータ開始行
 
 ' テンプレート一覧の列番号
 Private Const COL_ID         As Long = 1   ' A: テンプレートID

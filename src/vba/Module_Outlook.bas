@@ -4,10 +4,61 @@ Option Explicit
 '=============================================================
 ' Module_Outlook: Outlook COM連携モジュール
 ' レイトバインディングで Outlook を操作し、メール作成画面を開く
-' .Display を使用するため、ユーザーが確認してから手動送信できる
+' B5 に Outlook の実行ファイルパスを設定すると、そのバージョンを優先起動する
+' 例: C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE
 '=============================================================
 
-Private Const olMailItem As Long = 0
+Private Const olMailItem      As Long = 0
+Private Const SHEET_TEMPLATES As String = "テンプレート一覧"
+Private Const ROW_OUTLOOK_PATH As Long = 5  ' B5: Outlookパス（任意）
+
+'-------------------------------------------------------------
+' GetOutlookExePath: シートから Outlook 実行ファイルパスを取得する
+'-------------------------------------------------------------
+Private Function GetOutlookExePath() As String
+    On Error Resume Next
+    Dim path As String
+    path = Trim(CStr(ThisWorkbook.Sheets(SHEET_TEMPLATES).Cells(ROW_OUTLOOK_PATH, 2).Value))
+    On Error GoTo 0
+    If path = "" Then Exit Function
+
+    If Dir(path) = "" Then
+        MsgBox "Outlookパスに指定されたファイルが見つかりません。" & vbCrLf & path & vbCrLf & vbCrLf & _
+               "B5 のパスを確認するか、空欄にしてください。", vbExclamation, "Outlookパス設定エラー"
+        GetOutlookExePath = ""
+        Exit Function
+    End If
+    GetOutlookExePath = path
+End Function
+
+'-------------------------------------------------------------
+' LaunchSpecificOutlook: 指定パスの Outlook を Shell で起動し COM を返す
+'-------------------------------------------------------------
+Private Function LaunchSpecificOutlook(exePath As String) As Object
+    Dim olApp As Object
+
+    ' すでに起動中ならそのまま使う
+    On Error Resume Next
+    Set olApp = GetObject(, "Outlook.Application")
+    On Error GoTo 0
+    If Not olApp Is Nothing Then Set LaunchSpecificOutlook = olApp : Exit Function
+
+    ' 指定パスで新規起動
+    Shell Chr(34) & exePath & Chr(34), vbNormalFocus
+
+    ' COM が取得できるまで最大10秒ポーリング
+    Dim startTime As Single
+    startTime = Timer
+    Do
+        On Error Resume Next
+        Set olApp = GetObject(, "Outlook.Application")
+        On Error GoTo 0
+        If Not olApp Is Nothing Then Exit Do
+        Application.Wait Now + TimeValue("00:00:01")
+    Loop While Timer - startTime < 10
+
+    Set LaunchSpecificOutlook = olApp
+End Function
 
 '-------------------------------------------------------------
 ' CreateEmail: Outlook のメール作成画面を開く
@@ -18,12 +69,21 @@ Public Sub CreateEmail(toAddr As String, ccAddr As String, _
     On Error GoTo ErrHandler
 
     Dim olApp As Object
-    On Error Resume Next
-    Set olApp = GetObject(, "Outlook.Application")
-    On Error GoTo ErrHandler
+    Dim exePath As String
+    exePath = GetOutlookExePath()
 
-    If olApp Is Nothing Then
-        Set olApp = CreateObject("Outlook.Application")
+    If exePath <> "" Then
+        Set olApp = LaunchSpecificOutlook(exePath)
+        If olApp Is Nothing Then
+            MsgBox "指定した Outlook を起動できませんでした。" & vbCrLf & "パス: " & exePath, _
+                   vbCritical, "Outlook 起動エラー"
+            Exit Sub
+        End If
+    Else
+        On Error Resume Next
+        Set olApp = GetObject(, "Outlook.Application")
+        On Error GoTo ErrHandler
+        If olApp Is Nothing Then Set olApp = CreateObject("Outlook.Application")
     End If
 
     If olApp Is Nothing Then
