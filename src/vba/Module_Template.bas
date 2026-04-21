@@ -52,7 +52,8 @@ Public Function GetFieldLabel(fieldNum As Long) As String
     GetFieldLabel = Trim(label)
 End Function
 
- A列のラベルをキーにプレースホルダーを置換する
+'-------------------------------------------------------------
+' SubstitutePlaceholders: A列のラベルをキーにプレースホルダーを置換する
 ' A2:A4 のラベル名（末尾の「:」は除去）が {ラベル名} にマッチする
 ' 例) A2="案件名:" B2="ABC" → {案件名} を "ABC" に置換
 '-------------------------------------------------------------
